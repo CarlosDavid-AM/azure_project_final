@@ -94,3 +94,33 @@ input[type="text"]:focus {
   font-size: 0.9em;
   margin: 0;
 }
+
+/* Estilos para la pagina chat */
+
+#chat-box {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #2a2b3d;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  min-height: 250px;
+  min-width: 300px;
+  text-align: left;
+  overflow-y: auto;
+}
+.mensaje {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+.mensaje.usuario {
+  background: #44475a;
+  margin-left: 20px;
+}
+.mensaje.ia {
+  background: #6272a4;
+  margin-right: 20px;
+}
+.mensaje p {
+  margin: 0;
+}

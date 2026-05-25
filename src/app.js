@@ -39,9 +39,7 @@ app.get("/chat", (req, res) => {
 });
 
 // Endpoints
-const basePath = "/api";
-
-app.use(basePath, router);
+app.use(router);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;

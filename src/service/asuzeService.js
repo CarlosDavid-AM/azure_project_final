@@ -1,7 +1,7 @@
 function asuzeService() {
   const detectarImagen = async (req, res) => {
     const { url: imageUrl } = req.body;
-    
+
     if (!imageUrl) {
       return res
         .status(400)
@@ -43,8 +43,58 @@ function asuzeService() {
     }
   };
 
+  const chat = async (req, res) => {
+    const { pregunta } = req.body;
+
+    if (!pregunta) {
+      return res.status(400).json({ error: "Falta la pregunta en la petición." });
+    }
+
+    const endpointUrl = process.env.AZURE_CHAT_URL_ENDPOINT;
+    const token = process.env.TOKEN;
+
+    if (!endpointUrl || !token) {
+      return res.status(500).json({
+        error: "Falta configurar AZURE_CHAT_URL_ENDPOINT o TOKEN en las variables de entorno.",
+      });
+    }
+
+    const data = {
+      model: "Phi-4",
+      messages: [
+        {
+          role: "user",
+          content: pregunta,
+        },
+      ],
+    };
+
+    try {
+      const upstream = await fetch(endpointUrl, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!upstream.ok) {
+        console.error(`Error del servicio de Azure: ${upstream.status} ${upstream.statusText}`);
+        return res.status(500).json({ error: "Error de comunicación con el servicio de IA en Azure." });
+      }
+
+      const responseData = await upstream.json();
+      res.status(200).json(responseData);
+    } catch (error) {
+      console.error("Error al procesar el chat:", error);
+      res.status(500).json({ error: "Error interno al procesar la petición." });
+    }
+  };
+
   return {
     detectarImagen,
+    chat,
   };
 }
 

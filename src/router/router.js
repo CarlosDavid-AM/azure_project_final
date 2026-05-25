@@ -2,8 +2,11 @@ import express from "express";
 import asuzeService from "../service/asuzeService.js";
 
 const router = express.Router();
-const { detectarImagen } = asuzeService();
+const { detectarImagen, chat } = asuzeService();
 
-router.post("/imagen-analisis", detectarImagen);
+const basePath = "/api";
+
+router.post(`${basePath}/imagen-analisis`, detectarImagen);
+router.post(`${basePath}/chat`, chat);
 
 export default router;
