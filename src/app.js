@@ -38,6 +38,10 @@ app.get("/chat", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/pages", "chat.html"));
 });
 
+app.get("/resumen", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/pages", "resumen.html"));
+});
+
 // Endpoints
 app.use(router);
 

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resumir Texto</title>
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Resumir Texto con IA</h1>
+
+      <form action="" id="form-resumen" class="form-group" style="display: flex; flex-direction: column; gap: 15px;">
+        <textarea
+          id="input-texto"
+          placeholder="Pega aquí el texto que deseas resumir..."
+          rows="10"
+          style="width: 100%; padding: 10px; resize: vertical;"
+        ></textarea>
+        <button type="button" class="btn" id="btn-resumir">Resumir Texto</button>
+      </form>
+
+      <div id="resultado-box" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; min-height: 100px; display: none;">
+        <h3>Resultado del Resumen:</h3>
+        <p id="texto-resumido"></p>
+      </div>
+
+      <div class="buttons" style="margin-top: 30px">
+        <a class="btn" href="/">&larr; Volver al Inicio</a>
+      </div>
+    </div>
+  </body>
+</html>

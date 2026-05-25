@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     divMensaje.classList.add("mensaje", remitente);
 
     const p = document.createElement("p");
-    
+
     // Agregamos un prefijo para identificar quién habla
     const prefix = remitente === "usuario" ? "Tú: " : "IA: ";
     p.innerHTML = `<strong>${prefix}</strong>${texto}`;
@@ -28,18 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mostrar el mensaje del usuario en la pantalla
     agregarMensaje(pregunta, "usuario");
-    
+
     // Limpiar el input
     inputPregunta.value = "";
-    
+
     // Deshabilitar botón mientras carga
     btnEnviar.disabled = true;
     btnEnviar.textContent = "Pensando...";
 
     try {
-      // Hacemos la petición al backend
-      // Nota: Enviamos la pregunta, aunque el backend actual (asuzeService.js) 
-      // tiene una pregunta estática. Cuando lo actualices, ya estará listo aquí.
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -53,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
-      
+
       // La estructura de respuesta típica de Azure/OpenAI
       if (data && data.choices && data.choices.length > 0) {
         const respuestaIA = data.choices[0].message.content;
@@ -61,10 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         agregarMensaje("No se recibió una respuesta válida de la IA.", "ia");
       }
-
     } catch (error) {
       console.error("Error al enviar la pregunta:", error);
-      agregarMensaje("Ocurrió un error al intentar conectarse con el servidor.", "ia");
+      agregarMensaje(
+        "Ocurrió un error al intentar conectarse con el servidor.",
+        "ia",
+      );
     } finally {
       // Restaurar el botón
       btnEnviar.disabled = false;
@@ -72,13 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Escuchar el clic en el botón
   btnEnviar.addEventListener("click", enviarPregunta);
 
   // También escuchar cuando se presione "Enter" en el input
   inputPregunta.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Evita que se recargue la página si el botón cambiara a type="submit"
+      e.preventDefault();
       enviarPregunta();
     }
   });
