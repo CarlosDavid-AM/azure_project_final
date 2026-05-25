@@ -1,8 +1,9 @@
 import express from "express";
-import detectarImagen from "../service/asuzeService.js";
+import asuzeService from "../service/asuzeService.js";
 
 const router = express.Router();
+const { detectarImagen } = asuzeService();
 
-router.post("/juegos", detectarImagen);
+router.post("/imagen-analisis", detectarImagen);
 
 export default router;

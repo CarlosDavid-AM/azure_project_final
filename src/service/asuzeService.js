@@ -1,44 +1,51 @@
-const detectarImagen = async (req, res) => {
-  const suscriptionKey = ""
-  const endpoint = ""
-
-  const url = `${endpoint}/vision/v3.2/analyze?visualFeatures=Categories,Description,Color`
-  const imageURL = req.params
-
-  try{
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        "Ocp-Apim-Subscription-Key": suscriptionKey,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ url: imageURL })
-    })
-
-    if (!response.ok){
-      const errorData = await response.json()
-      throw new Error(`Error en: ${errorData.error.message}`)
+function asuzeService() {
+  const detectarImagen = async (req, res) => {
+    const { url: imageUrl } = req.body;
+    
+    if (!imageUrl) {
+      return res
+        .status(400)
+        .json({ error: "Falta el campo 'url' en el cuerpo de la petición." });
     }
 
-    //Logramos recibir un resultado favorable
-    const data = await response.json()
-    res.status(200).json(data);
-    // const confianza = (data.description.captions[0].confidence * 100).toFixed(2)
+    const endpoint = process.env.AZURE_ENDPOINT;
+    const suscriptionKey = process.env.SUSCRIPTION_KEY;
 
-    // //Muestra todos los datos
-    // //console.log(data.description)
-    
-    // console.log("Descripción: ", data.description.captions[0].text)
-    // console.log(`Confianza: ${confianza} %`)
-    
-    // //join método que itera y concatena valores de un array
-    // console.log("Etiquetas: " + data.description.tags.join(", ")) 
+    if (!endpoint || !suscriptionKey) {
+      return res.status(500).json({
+        error:
+          "Falta configurar las variables de entorno AZURE_ENDPOINT o SUSCRIPTION_KEY en el servidor.",
+      });
+    }
 
+    const url = `${endpoint}/vision/v3.2/analyze?visualFeatures=Categories,Description,Color`;
 
+    try {
+      const upstream = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Ocp-Apim-Subscription-Key": suscriptionKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: imageUrl }),
+      });
 
-  }catch(error){
-    console.error(`Error analizando imagen: ${error.message}`)
-  }
+      const body = await upstream.text();
+      const contentType =
+        upstream.headers.get("content-type") || "application/json";
+      res.status(upstream.status).type(contentType).send(body);
+    } catch (error) {
+      console.error(`Error analizando imagen: ${error.message}`);
+      res.status(500).json({
+        error: "No se pudo contactar a Azure Cognitive Services",
+        detail: error?.message ?? String(error),
+      });
+    }
+  };
+
+  return {
+    detectarImagen,
+  };
 }
 
-export default detectarImagen;
+export default asuzeService;

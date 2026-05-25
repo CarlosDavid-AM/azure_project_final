@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     imagen.alt = "";
 
     try {
-      const response = await fetch("/api/vision/analyze", {
+      const response = await fetch("/api/imagen-analisis", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let errorMessage = "Error al analizar";
         try {
           const errorData = await response.json();
-          errorMessage = errorData.error?.message || errorData.message || errorMessage;
+          errorMessage =
+            errorData.error?.message || errorData.message || errorMessage;
         } catch (_) {
           // Si no es JSON válido
         }
@@ -37,15 +38,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
-      
-      if (data.description && data.description.captions && data.description.captions.length > 0) {
+
+      if (
+        data.description &&
+        data.description.captions &&
+        data.description.captions.length > 0
+      ) {
         const caption = data.description.captions[0];
         imagen.src = imageUrl;
         imagen.alt = caption.text;
         descripcion.textContent = `Descripción: ${caption.text}`;
         confianza.textContent = `Confianza: ${Math.round(caption.confidence * 100)}%`;
       } else {
-        descripcion.textContent = "No se pudo obtener una descripción de la imagen.";
+        descripcion.textContent =
+          "No se pudo obtener una descripción de la imagen.";
         confianza.textContent = "";
       }
     } catch (error) {
