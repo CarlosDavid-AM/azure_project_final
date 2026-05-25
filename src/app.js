@@ -34,11 +34,14 @@ app.get("/imagen", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/pages", "imagen.html"));
 });
 
+app.get("/chat", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/pages", "chat.html"));
+});
+
 // Endpoints
 const basePath = "/api";
 
 app.use(basePath, router);
-
 
 // Analizar imagen con IA
 app.post("/api/vision/analyze", async (req, res) => {

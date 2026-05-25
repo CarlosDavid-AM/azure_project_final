@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat IA</title>
+    <link rel="stylesheet" href="/css/index.css" />
+    <style>
+      /* Estilos específicos básicos para el chat */
+      #chat-box {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        background: #2a2b3d;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        min-height: 250px;
+        min-width: 300px;
+        text-align: left;
+        overflow-y: auto;
+      }
+      .mensaje {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 6px;
+      }
+      .mensaje.usuario {
+        background: #44475a;
+        margin-left: 20px;
+      }
+      .mensaje.ia {
+        background: #6272a4;
+        margin-right: 20px;
+      }
+      .mensaje p {
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Chat con IA</h1>
+
+      <div id="chat-box">
+        <!-- Ejemplo de como se verian los mensajes -->
+        <div class="mensaje ia"></div>
+      </div>
+
+      <form action="" id="form-chat" class="form-group">
+        <input
+          type="text"
+          id="input-pregunta"
+          placeholder="Escribe tu pregunta aquí..."
+          autocomplete="off"
+          style="width: 400px"
+        />
+        <button type="button" class="btn">Enviar</button>
+      </form>
+
+      <div class="buttons" style="margin-top: 30px">
+        <a class="btn" href="/">&larr; Volver al Inicio</a>
+      </div>
+    </div>
+  </body>
+</html>
