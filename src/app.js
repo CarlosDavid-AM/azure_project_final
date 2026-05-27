@@ -42,6 +42,10 @@ app.get("/resumen", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/pages", "resumen.html"));
 });
 
+app.get("/anonimizar", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/pages", "anonimizar.html"));
+});
+
 // Endpoints
 app.use(router);
 
