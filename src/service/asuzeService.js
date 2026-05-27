@@ -198,10 +198,87 @@ function asuzeService() {
     }
   };
 
+  const anonimizar = async (req, res) => {
+    const { texto } = req.body;
+
+    if (!texto) {
+      return res
+        .status(400)
+        .json({ error: "Falta el campo 'texto' en el cuerpo de la petición." });
+    }
+
+    const endpoint = process.env.AZURE_ENDPOINT;
+    const suscriptionKey = process.env.SUSCRIPTION_KEY;
+
+    if (!endpoint || !suscriptionKey) {
+      return res.status(500).json({
+        error:
+          "Falta configurar las variables de entorno AZURE_ENDPOINT o SUSCRIPTION_KEY en el servidor.",
+      });
+    }
+
+    const url = `${endpoint}/language/:analyze-text?api-version=2023-04-01`;
+
+    try {
+      const documentoAnonimizar = {
+        kind: "PiiEntityRecognition",
+        analysisInput: {
+          documents: [
+            {
+              id: "1",
+              language: "es",
+              text: texto,
+            },
+          ],
+        },
+        parameters: {
+          redactionPolicy: {
+            policyKind: "CharacterMask",
+            redactionCharacter: "*",
+          },
+        },
+      };
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Ocp-Apim-Subscription-Key": suscriptionKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(documentoAnonimizar),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error en Azure: ${errorData.error?.message || "Error desconocido"}`);
+      }
+
+      const data = await response.json();
+
+      if (data.results?.errors?.length > 0) {
+        console.error(data.results.errors);
+        return res.status(400).json({ errors: data.results.errors });
+      }
+
+      const primerDocumento = data.results.documents[0];
+      
+      res.status(200).json({
+        resultado: primerDocumento,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({
+        error: "No se pudo anonimizar el texto",
+        detalle: error.message,
+      });
+    }
+  };
+
   return {
     detectarImagen,
     chat,
     resumen,
+    anonimizar,
   };
 }
 
